@@ -1,13 +1,14 @@
 import React, { ComponentChildren } from 'react'
 import { StyleSheet, Text as NativeText } from 'react-native'
+
 interface TextProps {
   children: ComponentChildren
 }
 
 export const Text = ({ children }: TextProps) => (
-  <Text style={styles.base}>
+  <NativeText style={styles.base}>
     {children}
-  </Text>
+  </NativeText>
 )
 
 const styles = StyleSheet.create({
