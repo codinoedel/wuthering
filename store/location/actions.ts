@@ -1,3 +1,7 @@
+export const fetchLocation = () => ({
+  type: 'FETCH_LOCATION',
+})
+
 export const setLocation = (lat: number, long: number) => ({
   type: 'SET_LOCATION',
   lat,

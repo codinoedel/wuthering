@@ -18,3 +18,5 @@ export const configureStore = () => {
 
 export type AppState = ReturnType<typeof rootReducer>
 export type AppDispatch = ReturnType<typeof configureStore>
+
+export type LoadState = 'init' | 'loading' | 'loaded' | 'error'

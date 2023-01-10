@@ -2,10 +2,14 @@
 import update from 'immutability-helper'
 import { Action as ReduxAction } from 'redux'
 
-interface SetDailyData extends ReduxAction<'SET_DAILY_DATA'> { }
+import type { LoadState } from '../'
+
+interface SetDaily extends ReduxAction<'SET_DAILY_DATA'> {
+  data: DailyData
+}
 
 type Action =
-  | SetDailyData
+  | SetDaily
 
 export type Day = {
   dt: string
@@ -13,7 +17,7 @@ export type Day = {
   sunset: string
   moonrise: string
   moonset: string
-  moon_phase: number
+  moonPhase: number
   temp: {
     min: number
     max: number
@@ -21,17 +25,39 @@ export type Day = {
 }
 
 export type DailyForecast = {
+  loadState: LoadState
   days: Record<string, Day>
 }
 
 const initialState: DailyForecast = {
+  loadState: 'init',
   days: {}
 }
 
 export const dailyReducer = (state=initialState, a: Action): DailyForecast => {
   switch (a.type) {
-    case 'SET_DAILY_DATA':
-      return state
+    case 'FETCH_FORECAST':
+      return update(state, { $merge: {
+        loadState: 'loading'
+      }})
+
+    case 'SET_DAILY':
+      return update(state, { $merge: {
+        loadState: 'loaded',
+        days: a.data.reduce((acc, d) => {
+          acc[d.dt] = {
+            dt: d.dt,
+            sunrise: d.sunrise,
+            sunset: d.sunset,
+            moonrise: d.moonrise,
+            moonset: d.moonset,
+            moonPhase: d.moon_phase,
+            temp: d.temp,
+          }
+
+          return acc
+        }, {})
+      }})
 
     default:
       return state

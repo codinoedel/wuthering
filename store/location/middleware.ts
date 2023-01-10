@@ -1,21 +1,28 @@
 import { Middleware } from 'redux'
+
+import { useAppSelector } from '../../hooks'
 import { AppState } from '../'
-import { setLocation, setLocationError } from './actions'
+import { getIsLocationFetched } from './selectors'
+import { fetchingLocation, setLocation, setLocationError } from './actions'
 
-import type { Dispatch, Action } from 'redux'
+export const locationMiddleware: Middleware<{}, AppState> = ({ dispatch, getState }) => next => action => {
+  switch(action.type) {
+    case 'FETCH_LOCATION':
+      const isLocationFetched = getIsLocationFetched(getState())
 
-export const locationMiddleware = (): Middleware<{}, AppState> => (
-  ({ dispatch }) => next => action => {
-    const success = (pos: GeolocationPosition) => {
-      dispatch(setLocation(pos.coords.latitude, pos.coords.longitude))
-    }
+      if (!isLocationFetched) {
+        const success = (pos: GeolocationPosition) => {
+          dispatch(setLocation(pos.coords.latitude, pos.coords.longitude))
+        }
 
-    const error = (err: Error) => {
-      dispatch(setLocationError(err.message))
-    }
+        const error = (err: Error) => {
+          dispatch(setLocationError(err.message))
+        }
 
-    navigator.geolocation.getCurrentPosition(success, error)
-
-    return next(action)
+        navigator.geolocation.getCurrentPosition(success, error)
+      }
+      break
   }
-)
+
+  return next(action)
+}

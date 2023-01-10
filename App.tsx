@@ -6,16 +6,21 @@ import { StyleSheet, View } from 'react-native'
 import { Provider } from 'react-redux'
 import {
   useFonts,
-  Lato_400Regular
-} from '@expo-google-fonts/lato'
+  Roboto_100Thin,
+  Roboto_400Regular,
+  Roboto_700Bold,
+} from '@expo-google-fonts/roboto'
 
 
 import { CurrentWeather } from './CurrentWeather'
+import { Initializer } from './Initializer'
 import { configureStore } from './store'
 
 export default function App() {
   let [ fontsLoaded ] = useFonts({
-    Lato_400Regular
+    Roboto_100Thin,
+    Roboto_400Regular,
+    Roboto_700Bold,
   })
 
   if (!fontsLoaded) {
@@ -24,10 +29,12 @@ export default function App() {
 
   return (
     <Provider store={configureStore()}>
-      <View style={styles.container}>
-        <CurrentWeather />
-        <StatusBar style="auto" />
-      </View>
+      <Initializer>
+        <View style={styles.container}>
+          <CurrentWeather />
+          <StatusBar style="auto" />
+        </View>
+      </Initializer>
     </Provider>
   );
 }

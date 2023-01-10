@@ -8,8 +8,9 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "@expo-google-fonts/lato": "^0.1.0",
+    "@expo-google-fonts/roboto": "^0.1.0",
     "classnames": "^2.3.1",
+    "date-fns": "^2.21.3",
     "expo": "~41.0.1",
     "expo-app-loading": "^1.0.3",
     "expo-font": "~9.1.0",

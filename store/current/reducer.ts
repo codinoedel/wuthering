@@ -2,26 +2,30 @@
 import update from 'immutability-helper'
 import { Action as ReduxAction } from 'redux'
 
-interface SetCurrentWeather extends ReduxAction<'SET_CURRENT_WEATHER'> { }
+import { LoadState } from '../'
+
+interface SetCurrent extends ReduxAction<'SET_CURRENT'> {
+  data: CurrentData
+}
 
 type Action =
-  | SetCurrentWeather
+  | SetCurrent
 
-export type CurrentWeather = {
+export type CurrentData = {
   dt: string
   sunrise: string
   sunset: string
   temp: number
-  feels_like: number
+  feelsLike: number
   pressure: number
   humidity: number
-  dew_point: number
+  dewPoint: number
   clouds: number
   uvi: number
   visibility: number
-  wind_speed: number
-  wind_gust: number
-  wind_deg: number
+  windSpeed: number
+  windGust: number
+  windDeg: number
   weather: {
     id: string
     main: string
@@ -30,34 +34,44 @@ export type CurrentWeather = {
   }
 }
 
-const initialState: CurrentWeather = {
-  dt: '',
-  sunrise: '',
-  sunset: '',
-  temp: 0,
-  feels_like: 0,
-  pressure: 0,
-  humidity: 0,
-  dew_point: 0,
-  clouds: 0,
-  uvi: 0,
-  visibility: 0,
-  wind_speed: 0,
-  wind_gust: 0,
-  wind_deg: 0,
-  weather: {
-    id: '',
-    main: '',
-    description: '',
-    icon: ''
-  },
+type Current = {
+  loadState: LoadState
+  data: CurrentData | null
 }
 
-export const currentReducer = (state=initialState, a: Action): CurrentWeather => {
-  switch (a.type) {
-    case 'SET_CURRENT_WEATHER':
-      return state
+const initialState: Current = {
+  loadState: 'init',
+  data: null
+}
 
+export const currentReducer = (state=initialState, a: Action): Current => {
+  switch (a.type) {
+    case 'FETCH_FORECAST':
+      return update(state, { $merge: {
+        loadState: 'loading'
+    }})
+
+    case 'SET_CURRENT':
+      return update(state, { $merge: {
+        loadState: 'loaded',
+        data: {
+          dt: a.data.dt,
+          sunrise: a.data.sunrise,
+          sunset: a.data.sunset,
+          temp: a.data.temp,
+          feelsLike: a.data.feels_like,
+          pressure: a.data.pressure,
+          humidity: a.data.humidity,
+          dewPoint: a.data.dew_point,
+          clouds: a.data.clouds,
+          uvi: a.data.uvi,
+          visibility: a.data.visibility,
+          windSpeed: a.data.wind_speed,
+          windGust: a.data.wind_gust,
+          windDeg: a.data.wind_deg,
+          weather: a.data.weather,
+        }
+      }})
     default:
       return state
   }

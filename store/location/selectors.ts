@@ -1,8 +1,8 @@
 import type { AppState } from '../'
 
 type Location = {
-  lat: string
-  long: string
+  lat: string | null
+  long: string | null
 }
 
 export const getLocation = (state: AppState): Location => ({
@@ -10,8 +10,12 @@ export const getLocation = (state: AppState): Location => ({
   long: state.location.long,
 })
 
-export const hasLocation = (state: AppState): boolean => (
-  state.location.lat !== null && state.location.long !== null
+export const getIsLocationFetched = (state: AppState): boolean => (
+  state.location.loadState !== 'init'
+)
+
+export const getIsLocationValid = (state: AppState): boolean => (
+  state.location.loadState === 'loaded'
 )
 
 export const getLocationError = (state: AppState): string => state.location.err
